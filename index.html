@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.14.0/proj4.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <link rel="stylesheet" href="map.css">
+    <title>Time-series viewer</title>
+</head>
+<body>
+    <div class="container">
+        <div id="map", class="left"></div>
+        <div id="content">
+            <div class="right">
+            <div id="maintext" class="blog-post">
+                <h1>Time-series viewer</h1>
+                <i>(Lastest update: 18.11.2024)</i>
+                <br>Time-series viewer (NDVI) from one example tile in the <b><a href="https://vudongpham.github.io/EOLabDatacubeReport/" target="_blank">Datacube</a></b> from <b><a target="_blank" href="https://geo.uni-greifswald.de/en/chairs/geographie/translate-to-english-fernerkundung-und-geoinformationsverarbeitung/">EO Lab.</a></b> 
+                <br>Data was processed with <b><a target="_blank" href="https://github.com/davidfrantz/force">FORCE.</a></b>
+                <br>Spectral profiles are derived from clear sky observations from Landsat 8,9 and Sentinel-2 A,B. Spectral profile presents 30 m × 30 m pixel.
+                <p style="color:red;">(Note that data is only available inside the red rectangular).</p>
+                Date range: <b>01.01.2023 - 31.12.2023.</b>
+                <br>👨🏻 App developer : <b><a target="_blank" href="https://vudongpham.github.io/">Dong Pham</a></b>
+                <br>✉️ Contact : <a href="mailto: vudong.pham@uni-greifswald.de">vudong.pham@uni-greifswald.de</a>
+                <br><div id="buttonLocation"><b>⬅️ Click on the map (inside the polygon) to see spectral profiles</b></div>
+            <div id="spectralContent"  style="width: 100%; height: 100%">
+                <canvas id="myScatterPlot" width="100px" height="50px"></canvas>
+            </div> 
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="map.js"></script>
+</html>

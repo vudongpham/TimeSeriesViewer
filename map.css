@@ -1,0 +1,77 @@
+
+.container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 100%;
+}
+
+.left {
+  height: 800px;
+  padding: 10px; /* Optional: add some padding */
+}
+
+
+.right {
+  display: grid;
+  grid-template-rows: 60% 40%;
+  height: 800px;
+  padding: 0px; /* Optional: add some padding */
+}
+
+.text {
+  font-size: 20px;
+  font-family: "Gill Sans", sans-serif;
+  line-height: 1.5;
+}
+
+
+.blog-post {
+font-family: 'Georgia', serif; /* Classic and professional font */
+font-size: 15px; /* Comfortable reading size */
+line-height: 1.8; /* Spacious line height for readability */
+color: #333333; /* Neutral and professional text color */
+background-color: #ffffff; /* Clean background */
+margin: 0px left; /* Center the content */
+padding: 10px; /* Add space around the content */
+max-width: 800px; /* Optimal width for reading */
+}
+
+.blog-post h1, .blog-post h2, .blog-post h3 {
+font-family: 'Arial', sans-serif; /* Complementary font for headings */
+color: #111111; /* Slightly darker for contrast */
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+.blog-post p {
+margin-bottom: 0px; /* Space between paragraphs */
+margin-top: 0px;
+}
+
+.blog-post a {
+color: #007BFF; /* Professional blue for links */
+text-decoration: none; /* No underline */
+}
+
+.blog-post a:hover {
+text-decoration: underline; /* Underline on hover */
+}
+
+.blog-post blockquote {
+font-style: italic;
+color: #555555; /* Subdued color for quotes */
+border-left: 4px solid #007BFF; /* Highlighted bar */
+margin: 10px 0;
+padding-left: 15px;
+}
+
+.blog-post ul, .blog-post ol {
+margin: 10px;
+padding-left: 10px; /* Indent lists */
+}
+
+.blog-post img {
+max-width: 100%; /* Responsive images */
+border-radius: 5px; /* Rounded corners for images */
+margin: 20px 0;
+}
