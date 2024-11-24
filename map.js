@@ -48,7 +48,7 @@ async function loadData() {
     } catch (error) {
         console.error("Error loading data:", error);
     } finally {
-        console.log("Done");
+        console.log("Finished loading data");
     }
 }
 
