@@ -1,73 +1,74 @@
-
-
-function get_image(sensor, doy){
-    var json_data = (function () {
-        var json = null;
-        $.ajax({
-            'async': false,
-            'global': false,
-            'url': `json_data/${sensor}_${doy}.json`,
-            'dataType': "json",
-            'success': function (data) {
-                json = data;
-            }
-        });
-        return json;
-    })();
-    return json_data
-}
-
-var doy_list_ls = (function () {
-    var json = null;
-    $.ajax({
-        'async': false,
-        'global': false,
-        'url': 'json_data/LS_doylist.json',
-        'dataType': "json",
-        'success': function (data) {
-            json = data;
-        }
-    });
-    return json;
-})();
-
-var doy_list_s2 = (function () {
-    var json = null;
-    $.ajax({
-        'async': false,
-        'global': false,
-        'url': 'json_data/S2_doylist.json',
-        'dataType': "json",
-        'success': function (data) {
-            json = data;
-        }
-    });
-    return json;
-})();
-
 var data_stack_LS = [];
 var data_stack_S2 = [];
+var doy_list_ls = 0;
+var doy_list_s2 = 0;
 
-for (let index = 0; index < doy_list_ls.length; index++) {
-    data_stack_LS.push(get_image('LS', doy_list_ls[index]))
-    
+
+async function fetchJson(url) {
+    return $.ajax({
+        url: url,
+        dataType: "json"
+    });
 }
 
-for (let index = 0; index < doy_list_s2.length; index++) {
-    data_stack_S2.push(get_image('S2', doy_list_s2[index]))
-    
+async function getImage(sensor, doy) {
+    const url = `json_data/${sensor}_${doy}.json`;
+    return fetchJson(url);
 }
 
+function display_progress(count, full_process){
+    var progress = (count / full_process) * 100;
+    progress = progress.toFixed(2);
+    document.getElementById("loading_text").innerHTML = `${progress} % </div>`;
+}
 
+async function loadData() {
+    try {
+        var count = 0;
+        doy_list_ls = await fetchJson('json_data/LS_doylist.json');
+        doy_list_s2 = await fetchJson('json_data/S2_doylist.json');
+        const full_process = doy_list_ls.length + doy_list_s2.length;
+
+        // Load LS data using a for loop
+        for (let i = 0; i < doy_list_ls.length; i++) {
+            const doy = doy_list_ls[i];
+            data_stack_LS.push(await getImage('LS', doy));
+            count += 1
+            display_progress(count, full_process);
+        }
+
+        // Load S2 data using a for loop
+        for (let i = 0; i < doy_list_s2.length; i++) {
+            const doy = doy_list_s2[i];
+            data_stack_S2.push(await getImage('S2', doy));
+            count += 1
+            display_progress(count, full_process);
+        }
+
+    } catch (error) {
+        console.error("Error loading data:", error);
+    } finally {
+        console.log("Done");
+    }
+}
+
+const start = async function() {
+    const loadingscreen = document.getElementById("loading");
+    await loadData();
+    loadingscreen.remove();
+}
+
+start();
 
 var map = L.map('map').setView([52.48044, 13.23972], 11);
 
 var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});
-
+            maxZoom: 19,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
 Esri_WorldImagery.addTo(map);
+
+
 
 const polygon_coordinates = [
     [
@@ -92,6 +93,7 @@ let circleMarker = null;
 orig_project = proj4.defs("EPSG:4326", "+proj=longlat +datum=WGS84 +no_defs");
 target_project = proj4.defs("EPSG:3035", "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs");
 
+
 function calculateRowCol(x, y, west, east, north, south, gridSize) {
     // Calculate cell dimensions
     const cellWidth = (east - west) / gridSize;
@@ -110,6 +112,7 @@ function calculateRowCol(x, y, west, east, north, south, gridSize) {
 }
 
 // Example usage
+// const [polygon_west, polygon_east, polygon_north, polygon_south] =getBoundingBox(polygon_coordinates);
 const polygon_west = 4526026.3630;
 const polygon_east = 4556026.3630;
 const polygon_north = 3284919.6080;
@@ -161,7 +164,7 @@ polygon.on('click', function (e) {
         document.getElementById("buttonLocation").innerHTML = tooltip_content;
     }
 
-    createChart()
+    createChart();
 
 });
 
@@ -275,7 +278,7 @@ function createChart() {
                     title: {
                         display: true,
                         text: 'Day of years'
-                      }
+                    }
                 },
                 y: {
                     min: min_y,
@@ -283,7 +286,7 @@ function createChart() {
                     title: {
                         display: true,
                         text: 'NDVI × 10,000'
-                      }
+                    }
                 }
 
             },
@@ -302,9 +305,6 @@ function createChart() {
             }
         }
     });
-
-
-
 }
 
     

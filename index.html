@@ -16,8 +16,14 @@
     <title>Time-series viewer</title>
 </head>
 <body>
+    <div id="loading", class="overlay">
+        <div>Loading map data, bear with me</div>
+        <div id="spiner", class="loader"></div>
+        <div id="loading_text"></div>
+    </div>
     <div class="container">
-        <div id="map", class="left"></div>
+        <!-- <div id="temp" class="left">aaaaaaaaa</div> -->
+        <div id="map" class="left"></div>
         <div id="content">
             <div class="right">
             <div id="maintext" class="blog-post">
