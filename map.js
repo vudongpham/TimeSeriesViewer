@@ -1,3 +1,72 @@
+// Polygon in EPSG:4032
+const bound_path = 'tile/bounds.geojson';
+
+// Extent of the tile in EPSG:3035
+const polygon_west = 4526026.3630;
+const polygon_east = 4556026.3630;
+const polygon_north = 3284919.6080;
+const polygon_south = 3254919.6080;
+const polygon_gridSize = 1000;
+
+
+
+function calculateCentroid(polygon) {
+    const coordinates = polygon[0]; // Extract the first ring of the polygon
+    let signedArea = 0;
+    let cx = 0;
+    let cy = 0;
+
+    for (let i = 0; i < coordinates.length - 1; i++) {
+        const x0 = coordinates[i][1]; // Longitude
+        const y0 = coordinates[i][0]; // Latitude
+        const x1 = coordinates[i + 1][1]; // Next longitude
+        const y1 = coordinates[i + 1][0]; // Next latitude
+
+        const a = x0 * y1 - x1 * y0;
+        signedArea += a;
+        cx += (x0 + x1) * a;
+        cy += (y0 + y1) * a;
+    }
+
+    signedArea *= 0.5;
+    cx = cx / (6 * signedArea);
+    cy = cy / (6 * signedArea);
+
+    return [cy, cx]; // Return as [latitude, longitude]
+}
+
+var working_tile = null;
+
+$.ajax({
+    url: bound_path, // Path to your GeoJSON file
+    dataType: "json",
+    async: false,
+    global: false,
+    success: function(data) {
+        // Store the polygon data for later use
+        working_tile = data;
+
+        // You can process the polygon here if needed
+        console.log("Tile data loaded");
+    },
+    error: function(xhr) {
+        console.error(`Failed to load GeoJSON: ${xhr.status} ${xhr.statusText}`);
+    }
+});
+
+var tile_coords = working_tile.features[0].geometry.coordinates[0];
+
+var tile_polygon = [[]];
+
+for (let i = 0; i < tile_coords.length; i++) {
+    tile_polygon[0].push([tile_coords[i][1], tile_coords[i][0]])
+    
+}
+
+const center_tile_coords = calculateCentroid(tile_polygon);
+
+
+
 var data_stack_LS = [];
 var data_stack_S2 = [];
 var doy_list_ls = 0;
@@ -60,7 +129,7 @@ const start = async function() {
 
 start();
 
-var map = L.map('map').setView([52.48044, 13.23972], 11);
+var map = L.map('map').setView(center_tile_coords, 11);
 
 var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
@@ -70,19 +139,9 @@ Esri_WorldImagery.addTo(map);
 
 
 
-// Coordinates in EPSG:3035
-const polygon_coordinates = [
-    [
-        [52.63492288657163, 13.02928873674335],
-        [52.622877467237075, 13.471956009371267],
-        [52.353626903441857, 13.450849545301722],
-        [52.365588470916983, 13.010864900757348],
-        [52.634922886571637, 13.02928873674335]
-    ]
-];
 
 // Add the polygon to the map
-const polygon = L.polygon(polygon_coordinates, {
+const polygon = L.polygon(tile_polygon, {
     color: 'red',   // Outline color
     fillColor: 'yellow', // Fill color
     fillOpacity: 0.0 // Transparency
@@ -112,13 +171,8 @@ function calculateRowCol(x, y, west, east, north, south, gridSize) {
     return { row, col };
 }
 
-// Example usage
-// const [polygon_west, polygon_east, polygon_north, polygon_south] =getBoundingBox(polygon_coordinates);
-const polygon_west = 4526026.3630;
-const polygon_east = 4556026.3630;
-const polygon_north = 3284919.6080;
-const polygon_south = 3254919.6080;
-const polygon_gridSize = 1000;
+
+
 var global_col = null;
 var global_row = null;
 var tooltip_content = null;
