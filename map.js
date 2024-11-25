@@ -210,11 +210,11 @@ polygon.on('click', function (e) {
     if (tooltip_content === null){
         tooltip_content = 
         `
-        Show time-series data for:
+        Showing data for:
         <div id="sensorGroup" onclick="createChart()">
-            <label><input type="radio" name="option" value="LS" checked="checked">Landsat</label>
-            <label><input type="radio" name="option" value="S2">Sentinel-2</label>
-            <label><input type="radio" name="option" value="Both">Both</label>
+            <label><input type="radio" name="option" value="Both" checked="checked">Both</label>
+            <label><input type="radio" name="option" value="LS">Only Landsat</label>
+            <label><input type="radio" name="option" value="S2">Only Sentinel-2</label>
         </div>`;
         document.getElementById("buttonLocation").innerHTML = tooltip_content;
     }
@@ -249,7 +249,7 @@ function get_data_plot(sensor){
     });
 
     var min_y = Math.min(...y_list);
-    return [chart_data, min_y, x_list, y_list]
+    return [chart_data, min_y]
 }
 
 function createChart() {
@@ -273,8 +273,8 @@ function createChart() {
     }
 
     // x_list, y_list will be used for future development
-    var [dataset_LS, min_y_LS, x_list_ls, y_list_ls] = get_data_plot('LS');
-    var [dataset_S2, min_y_S2, x_list_s2, y_list_s2] = get_data_plot('S2');
+    var [dataset_LS, min_y_LS] = get_data_plot('LS');
+    var [dataset_S2, min_y_S2] = get_data_plot('S2');
 
     // console.log(x_list_s2);
     // console.log(y_list_s2);
@@ -364,25 +364,8 @@ function createChart() {
             }
         }
     });
-
-    // currentChart.data.datasets.push({
-    //     label: 'Line Dataset',
-    //     data: dataset_S2,
-    //     borderColor: 'red',
-    //     borderWidth: 2,
-    //     type: 'line',
-    //     fill: false,
-    //     tension: 0.4
-    // });
-    // currentChart.update();
 }
 
-// function addLineChart(chart, dataset) {
-//     // Add the line dataset to the chart
-//     chart.data.datasets.push(dataset);
-//     // Update the chart to reflect the changes
-//     chart.update();
-// }
 
     
 
