@@ -2,10 +2,10 @@
 const bound_path = 'tile/bounds.geojson';
 
 // Extent of the tile in EPSG:3035
-const polygon_west = 4526026.3630;
-const polygon_east = 4556026.3630;
-const polygon_north = 3284919.6080;
-const polygon_south = 3254919.6080;
+const polygon_west = 4526026.3631;
+const polygon_east = 4556026.3631;
+const polygon_north = 3464919.6077;
+const polygon_south = 3434919.6077;
 const polygon_gridSize = 1000;
 
 
